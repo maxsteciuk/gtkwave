@@ -23,26 +23,31 @@ set(CONFIGURE_CMD
     ${CMAKE_SOURCE_DIR}/gtkwave3/configure 
                        --enable-tcl=no
 )
-add_custom_target(configure ALL
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/gtkwave3
-                  COMMAND ${CONFIGURE_CMD}
-)
 
 add_library(fst ${FST_SRC})
 add_library(lxt ${LXT_SRC})
 add_library(vzt ${VZT_SRC})
 add_library(bz2 ${BZ2_SRC})
 add_library(lzma ${LZMA_SRC})
+
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/gtkwave3/config.h)
+    add_custom_target(configure ALL
+                      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/gtkwave3
+                      COMMAND ${CONFIGURE_CMD}
+    )
+
+    add_dependencies(fst configure)
+    add_dependencies(lxt configure)
+    add_dependencies(vzt configure)
+    add_dependencies(bz2 configure)
+    add_dependencies(lzma configure)
+endif()
+
 add_executable(gtkwave3 ${MAIN_SRC})
 
 #TODO:
 #add_executable(gtkwave3_twin ${TWINWAVE_SRC})
 
-add_dependencies(fst configure)
-add_dependencies(lxt configure)
-add_dependencies(vzt configure)
-add_dependencies(bz2 configure)
-add_dependencies(lzma configure)
 add_dependencies(gtkwave3 fst lxt vzt bz2 lzma)
 
 #TODO:

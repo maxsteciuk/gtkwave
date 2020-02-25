@@ -22,24 +22,32 @@ set(CONFIGURE_CMD
     ${CMAKE_SOURCE_DIR}/gtkwave3-gtk3/configure 
                        --enable-tcl=no
 )
-add_custom_target(configure-gtk3 ALL
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/gtkwave3-gtk3
-                  COMMAND ${CONFIGURE_CMD}
-)
 
 add_library(fst-gtk3 ${FST_SRC})
 add_library(lxt-gtk3 ${LXT_SRC})
 add_library(vzt-gtk3 ${VZT_SRC})
 add_library(lzma-gtk3 ${LZMA_SRC})
+
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/gtkwave3-gtk3/config.h)
+    add_custom_target(configure-gtk3 ALL
+                      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/gtkwave3-gtk3
+                      COMMAND ${CONFIGURE_CMD}
+    )
+
+    add_dependencies(fst configure-gtk3)
+    add_dependencies(lxt configure-gtk3)
+    add_dependencies(vzt configure-gtk3)
+    add_dependencies(bz2 configure-gtk3)
+    add_dependencies(lzma configure-gtk3)
+endif()
+
 add_executable(gtkwave3-gtk3 ${MAIN_SRC})
 
 #TODO:
 #add_executable(gtkwave3-gtk3_twin ${TWINWAVE_SRC})
 
-add_dependencies(fst configure-gtk3)
-add_dependencies(lxt configure-gtk3 bz2)
-add_dependencies(vzt configure-gtk3 bz2)
-add_dependencies(lzma configure-gtk3)
+add_dependencies(lxt bz2)
+add_dependencies(vzt bz2)
 add_dependencies(gtkwave3-gtk3 fst-gtk3 lxt-gtk3 vzt-gtk3 lzma-gtk3)
 
 #TODO:
