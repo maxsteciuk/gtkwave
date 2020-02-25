@@ -5,12 +5,12 @@ include(ExternalProject)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ggdb -O3 -Wall")
 
-execute_process(COMMAND git submodule add https://github.com/maxsteciuk/gnome-cmake
-)
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/gnome-cmake/modules ${CMAKE_SOURCE_DIR}/gnome-modules
+execute_process(COMMAND git submodule 
+                        add https://github.com/maxsteciuk/gnome-cmake 
+			${CMAKE_SOURCE_DIR}/gnome-cmake
 )
 
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/gnome-modules")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/gnome-cmake/modules")
 
 find_package(Intl REQUIRED)
 find_package(GTK3)
